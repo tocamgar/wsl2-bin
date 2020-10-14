@@ -3,6 +3,7 @@
 # 02 Se añaden mensajes de entrada para video de entrada textos
 # 04 Se añaden t_ini y t_fin con lectura desde read y valores por defecto
 # añado ? en -map '0:a?' para que ignore la ausencia de flujo de audio
+
 #################################################################################################
 echo -n "Introduce el video de entrada: "
 read -e v_entrada			# RUTA COMPLETA DEL VÍDEO DE ENTRADA
