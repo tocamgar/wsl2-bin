@@ -1,0 +1,134 @@
+#! /bin/bash
+#0_1 CÓDIGO MÁS LEGIBLE, INDENTADO
+#0_2 ELIMINO CÓDIGO INÚTIL SUPERPOSICIÓN DE TXT Y FONDO EN LÍNEA 23
+#0_3 SUPERPONGO MÁSCARA ALPHA DEL EQUALIZADOR CON SHOWFREQS Y MASKEDMERGE
+#0_4 VERSIÓN DEFINITIVA CAMBIO DE AUDIO LINEA 6, ELIMINO d=10 EN FLUJO VIDEO COLOR NEGRO, ELIMINO -t 10 EN FLUJO SALIDA
+#0_5 CAMBIO EL TEXTO DEL TITULAR Y MEJORO SU INDENTACIÓN,
+#0_6 AÑADO LOGO
+#0_7 ELIMINO -LOOP 1 EN IMAGENES
+#0_8 CAMBIO OVERLAY POR PAD EN LINEA 38, ELIMINO -SHORTEST DE LA SALIDA
+#################################################################################################
+
+echo -n "Introduce el audio de entrada: "
+read -e a_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+# a_entrada="/mnt/e/Sonido/PRENSA/EL DIARIO.ES/El exnúmero dos de Interior depositó ante.m4a"			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+ruta="${a_entrada%/*}/"		# SOLO LA RUTA DEL FICHERO DE AUDIO
+nom_f="${a_entrada##*/}"	# NOMBRE DEL FICHERO CON EXTENSIÓN
+ext_f=".${nom_f##*.}"		# EXTENSIÓN DEL FICHERO CON . DELANTE
+nom_f="${nom_f%.*}"			# NOMBRE DEL FICHERO SIN EXTENSIÓN
+
+echo -n "Introduce la ruta del vídeo de salida: "
+read -e ruta_salida	# RUTA DEL VIDEO DE SALIDA
+
+fontfile="/mnt/c/Windows/Fonts/impact.ttf"	# UBICACIÓN DE LA FUENTE DE TEXTO A EMPLEAR
+
+read -p "Introduce el titular 1: " txt_l1				# LINEA 1 DE TEXTO A INCRUSTAR
+
+read -p "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
+
+read -p "Introduce la url: " url				# LINEA 2 DE TEXTO A INCRUSTAR
+
+fondo="/mnt/e/Pictures/${nom_f}.png"
+logo="/mnt/e/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
+
+f_resolucion="
+	[0:v]
+		scale=
+			width=-2:
+			height=288:
+			flags=bicubic
+	"
+f_txt_l1="
+,
+  drawtext=
+		fontfile='${fontfile}':
+		text='${txt_l1}':
+		fontcolor=white:
+		borderw=1:
+		fontsize=18:
+		alpha=0.33:
+		x=(w-tw)/2:
+		y=(th/4)
+"
+f_txt_l2="
+,
+  drawtext=
+		fontfile='${fontfile}':
+		text='${txt_l2}':
+		fontcolor=white:
+		borderw=1:
+		fontsize=18:
+		alpha=0.33:
+		x=(w-tw)/2:
+		y=(2*th)
+"
+f_url="
+,
+	drawtext=
+		fontfile='${fontfile}':
+		text='${url}':
+		fontcolor=lightskyblue:
+		borderw=1:
+		fontsize=10:
+		alpha=1:
+		x=(w-tw)/2:
+		y=(4*th)
+[fondo]
+"
+f_showwaves="
+;
+[0:a]
+	showwaves=
+		s=288x100:
+		mode=cline:
+		colors=white,
+	colorkey=
+		color=0x000000:
+		similarity=0.01:
+		blend=0.1,
+	format=yuva420p
+[waves]
+;
+[fondo][waves]
+	overlay=
+		x=(main_w-overlay_w)/2:
+		y=(main_h-overlay_h-5)
+[v1]
+"
+f_logo="
+;
+[2:v]
+	format=argb,
+	colorchannelmixer=
+		aa=0.33
+[logo]
+;
+[v1][logo]
+	overlay=
+		x=(main_w-overlay_w-5):
+		y=(main_h-overlay_h-5)
+[v]
+"
+
+filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_url}${f_showwaves}${f_logo}"
+
+v_salida="${ruta_salida}${nom_f}_waves_h264_288p_crf30_aac_q1_ac1.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
+
+##########
+# FFMPEG #
+##########
+
+ffmpeg -y \
+  -i "${a_entrada}"\
+  -i "${fondo}"\
+  -i "${logo}"\
+	-filter_complex "${filter_complex}" \
+  -map '[v]' \
+  -map '0:a' \
+	-c:a aac \
+	-q:a 1 \
+	-ac 1 \
+	-c:v h264 \
+	-crf 30 \
+  -shortest \
+  "${v_salida}"

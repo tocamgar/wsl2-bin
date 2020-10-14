@@ -1,0 +1,143 @@
+#! /bin/bash
+#0_1 CÓDIGO MÁS LEGIBLE, INDENTADO
+#0_2 ELIMINO CÓDIGO INÚTIL SUPERPOSICIÓN DE TXT Y FONDO EN LÍNEA 23
+#0_3 SUPERPONGO MÁSCARA ALPHA DEL EQUALIZADOR CON SHOWFREQS Y MASKEDMERGE
+#0_4 VERSIÓN DEFINITIVA CAMBIO DE AUDIO LINEA 6, ELIMINO d=10 EN FLUJO VIDEO COLOR NEGRO, ELIMINO -t 10 EN FLUJO SALIDA
+#0_5 CAMBIO EL TEXTO DEL TITULAR Y MEJORO SU INDENTACIÓN,
+#0_6 AÑADO LOGO
+#0_7 ELIMINO -LOOP 1 EN IMAGENES
+#0_8 CAMBIO OVERLAY POR PAD EN LINEA 38, ELIMINO -SHORTEST DE LA SALIDA
+#################################################################################################
+
+echo -n "Introduce el audio de entrada: "
+read -e a_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+# a_entrada="/mnt/e/Sonido/PRENSA/EL DIARIO.ES/El exnúmero dos de Interior depositó ante.m4a"			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+ruta="${a_entrada%/*}/"		# SOLO LA RUTA DEL FICHERO DE AUDIO
+nom_f="${a_entrada##*/}"	# NOMBRE DEL FICHERO CON EXTENSIÓN
+ext_f=".${nom_f##*.}"		# EXTENSIÓN DEL FICHERO CON . DELANTE
+nom_f="${nom_f%.*}"			# NOMBRE DEL FICHERO SIN EXTENSIÓN
+
+echo -n "Introduce la ruta del vídeo de salida: "
+read -e ruta_salida	# RUTA DEL VIDEO DE SALIDA
+
+read -p "Introduce el titular 1: " txt_l1				# LINEA 1 DE TEXTO A INCRUSTAR
+
+read -p "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
+
+read -p "Introduce la url: " url				# LINEA 2 DE TEXTO A INCRUSTAR
+
+gradiente="/mnt/e/Pictures/IRIS.png"
+mascara="/mnt/e/Pictures/MATRIZ.png"
+fondo="/mnt/e/Pictures/${nom_f}.png"
+logo="/mnt/e/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
+
+fontfile="/mnt/c/Windows/Fonts/impact.ttf"	# UBICACIÓN DE LA FUENTE DE TEXTO A EMPLEAR
+
+v_salida="${ruta_salida}${nom_f}_h264_288p_crf30_aac_q1_ac1.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
+#echo "\"${a_entrada}\""
+ffmpeg -y \
+  -i "${a_entrada}"\
+  -i "${gradiente}"\
+  -i "${mascara}"\
+  -i "${fondo}"\
+  -i "${logo}"\
+  -filter_complex\
+	"
+		[1:v]
+			scale=
+				width=150:
+				height=50
+		[gradiente];
+		
+		[2:v]
+			scale=
+			width=150:
+			height=50
+		[mascara_matriz_eq];
+
+		[gradiente][mascara_matriz_eq]
+			alphamerge
+		[matriz_eq];
+		
+		[3:v]
+			scale=
+				width=-2:
+				height=288
+			,
+			drawtext=
+				fontfile=/mnt/c/Windows/Fonts/impact.ttf:
+				text='${txt_l1}':
+				fontcolor=white:
+				borderw=1:
+				fontsize=18:
+				alpha=1:
+				x=(w-tw)/2:
+				y=(th/4)
+			,
+			drawtext=
+				fontfile=/mnt/c/Windows/Fonts/impact.ttf:
+				text='${txt_l2}':
+				fontcolor=white:
+				borderw=1:
+				fontsize=18:
+				alpha=1:
+				x=(w-tw)/2:
+				y=((th/4)+(text_h))
+			,
+			drawtext=
+				fontfile=/mnt/c/Windows/Fonts/impact.ttf:
+				text='${url}':
+				fontcolor=lightskyblue:
+				borderw=1:
+				fontsize=10:
+				alpha=1:
+				x=(w-tw)/2:
+				y=(th/4)+(4*text_h)
+			,
+			split
+		[fondo_txt][fondo_txt_2];
+		
+		[fondo_txt_2][matriz_eq]
+			overlay=
+				x=(main_w-overlay_w)/2:
+				y=(main_h-overlay_h)-5,
+			setsar=1
+		[fondo_txt_matriz_eq];
+
+		[0:a]
+			showfreqs=
+				s=150x50:
+				mode=bar:
+				colors=WHITE:
+				fscale=log,
+			pad=512:288:
+			(ow-iw)/2:
+			oh-ih-5:
+			black
+		[mascara_showfreqs];
+		
+		[fondo_txt][fondo_txt_matriz_eq][mascara_showfreqs]
+			maskedmerge
+		[v1];
+
+		[4:v]
+			format=argb,
+			colorchannelmixer=
+				aa=0.33
+		[logo];
+
+		[v1][logo]
+			overlay=
+				x=(main_w-overlay_w-5):
+				y=(main_h-overlay_h-5)
+		[v]
+	" \
+  -map '[v]' \
+  -map '0:a' \
+	-c:a aac \
+	-q:a 1 \
+	-ac 1 \
+	-c:v h264 \
+	-crf 30 \
+  -shortest \
+  "${v_salida}"

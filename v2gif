@@ -1,0 +1,26 @@
+#! /bin/bash
+# CONVIERTE UN VIDEO EN GIF ANIMADO
+echo -n "Introduce el video de entrada: "
+read -e v_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+ruta="${v_entrada%/*}/"
+nom_f="${v_entrada##*/}"
+ext_f=".${nom_f##*.}"
+nom_f="${nom_f%.*}"
+paleta="${ruta}${nom_f}.png"
+fps="4"
+
+v_salida="${ruta}${nom_f}.gif"
+
+ffmpeg -y -i "${v_entrada}" -vf fps="${fps}",palettegen "${paleta}"
+ffmpeg \
+  -y \
+  -i "${v_entrada}" \
+  -i "${paleta}" \
+    -filter_complex \
+      "
+        [0:v] fps=${fps} [v1],
+        [v1][1]paletteuse[v]
+      " \
+    -map '[v]' \
+  "${v_salida}"
+rm "${paleta}"
