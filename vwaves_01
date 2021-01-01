@@ -1,10 +1,7 @@
 #! /bin/bash
 # 01 Se discretiza ${filter_complex}
-# 02 Se elimina el logotipo y se substituye por el texto @tocamgar
-#    Se fija el tamaño en 360p
-#    Se modifica el texto para que no expanda los caracteres especiales (: \)
 #################################################################################################
-#set -x
+
 echo -n "Introduce el audio de entrada: "
 read -e a_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
 # a_entrada="/mnt/e/Sonido/PRENSA/EL DIARIO.ES/El exnúmero dos de Interior depositó ante.m4a"			# RUTA COMPLETA DEL AUDIO DE ENTRADA
@@ -25,16 +22,16 @@ read -p "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
 read -p "Introduce la url: " url				# LINEA 2 DE TEXTO A INCRUSTAR
 
 fondo="/mnt/e/Pictures/${nom_f}.png"
-#logo="/mnt/e/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
+logo="/mnt/e/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
 
-f_resolucion='
+f_resolucion="
 	[0:v]
 		scale=
 			width=-2:
-			height=360:
+			height=288:
 			flags=bicubic
-'
-f_txt_l1='
+	"
+f_txt_l1="
 ,
   drawtext=
 		fontfile='${fontfile}':
@@ -44,10 +41,9 @@ f_txt_l1='
 		fontsize=18:
 		alpha=1.00:
 		x=(w-tw)/2:
-		y=(th/4):
-		expansion=none
-'
-f_txt_l2='
+		y=(th/4)
+"
+f_txt_l2="
 ,
   drawtext=
 		fontfile='${fontfile}':
@@ -57,10 +53,9 @@ f_txt_l2='
 		fontsize=18:
 		alpha=1.00:
 		x=(w-tw)/2:
-		y=(2*th/4)+text_h:
-		expansion=none
-'
-f_url='
+		y=(2*th/4)+text_h
+"
+f_url="
 ,
 	drawtext=
 		fontfile='${fontfile}':
@@ -70,30 +65,16 @@ f_url='
 		fontsize=10:
 		alpha=1.00:
 		x=(w-tw)/2:
-		y=(5*th):
-		expansion=none
-'
-f_txt_logo='
-,
-  drawtext=
-		fontfile='/mnt/c/Windows/Fonts/arial.ttf':
-		text='@tocamgar':
-		fontcolor=white:
-		borderw=1:
-		fontsize=18:
-		alpha=0.60:
-		x=w-tw-10:
-		y=h-th-10:
-		expansion=none
-	[fondo]
-'
+		y=(5*th)
+[fondo]
+"
 f_showwaves="
 ;
 [1:a]
 	showwaves=
 		s=300x100:
 		mode=cline:
-		colors=0xffffff,
+		colors=0x000044,
 	colorkey=
 		color=0x000000:
 		similarity=0.01:
@@ -107,10 +88,24 @@ f_showwaves="
 	overlay=
 		x=(main_w-overlay_w)/2:
 		y=(main_h-overlay_h-5)
+[v1]
+"
+f_logo="
+;
+[2:v]
+	format=argb,
+	colorchannelmixer=
+		aa=0.33
+[logo]
+;
+[v1][logo]
+	overlay=
+		x=(main_w-overlay_w-5):
+		y=(main_h-overlay_h-5)
 [v]
 "
 
-filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_url}${f_txt_logo}${f_showwaves}"
+filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_url}${f_showwaves}${f_logo}"
 
 v_salida="${ruta_salida}${nom_f}_waves_h264_288p_crf30_aac_q1_ac1_01.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
 
@@ -121,7 +116,8 @@ v_salida="${ruta_salida}${nom_f}_waves_h264_288p_crf30_aac_q1_ac1_01.mp4"	# RUTA
 ffmpeg -y \
   -i "${fondo}"\
   -i "${a_entrada}"\
- 	-filter_complex "${filter_complex}" \
+  -i "${logo}"\
+	-filter_complex "${filter_complex}" \
   -map '[v]' \
   -map '1:a' \
 	-c:a aac \

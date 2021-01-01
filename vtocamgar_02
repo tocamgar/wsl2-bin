@@ -1,0 +1,9 @@
+#! /bin/bash
+set -x
+##########
+# FFMPEG #
+##########
+txt="texto\: l1"
+txt_l1="drawtext=fontfile='/mnt/c/Windows/Fonts/impact.ttf':text='${txt}':fontcolor=
+white:borderw=1:fontsize=18:alpha=0.67:x=(w-tw)/2:y=(th/4)"
+ffmpeg -y -i "/mnt/e/Vídeos/test.mp4" -filter_complex "${txt_l1}" -map '0:a?' -c:a aac -q:a 1 -ac 1 -c:v h264 -crf 30 "/mnt/e/Vídeos/test_h264_360p_crf30_aac_q1_ac1.mp4"
