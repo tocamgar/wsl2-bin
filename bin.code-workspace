@@ -1,7 +1,7 @@
 {
 	"folders": [
 		{
-			"uri": "vscode-remote://wsl+ubuntu-20.04/home/tocamgar"
+			"path": "."
 		}
 	],
 	"remoteAuthority": "wsl+ubuntu-20.04",
