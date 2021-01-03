@@ -81,9 +81,9 @@ ffmpeg -y \
 	-i "${v_entrada}" \
 	-filter_complex "${filter_complex}" \
 	-map '0:a?' \
+	-c:v h264 \
+	-crf 30 \
 	-c:a aac \
 	-q:a 1 \
 	-ac 1 \
-	-c:v h264 \
-	-crf 30 \
 	"${v_salida}"
