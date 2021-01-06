@@ -1,17 +1,24 @@
 #! /bin/bash
 # CONVIERTE UN VIDEO EN GIF ANIMADO
 echo -n "Introduce el video de entrada: "
-read -e v_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
-ruta="${v_entrada%/*}/"
-nom_f="${v_entrada##*/}"
-ext_f=".${nom_f##*.}"
-nom_f="${nom_f%.*}"
-paleta="${ruta}${nom_f}.png"
-fps="4"
+read -e -i "/mnt/e/Vídeos/" v_entrada			# RUTA COMPLETA DEL FICHERO DE VIDEO DE ENTRADA
+ruta="${v_entrada%/*}/" # RUTA DEL FICHERO DE VIDEO DE ENTRADA SIN EL NOMBRE NI LA EXTENSIÓN
+nom_f="${v_entrada##*/}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA CON EXTENSIÓN
+ext_f=".${nom_f##*.}" # EXTENSIÓN DEL FICHERO DE VIDEO DE ENTRADA
+nom_f="${nom_f%.*}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA SIN EXTENSIÓN
+paleta="${ruta}${nom_f}.png" # NOMBRE DEL FICHERO DE LA PALETA DE 256 COLORES DEL GIF ANIMADO PARA OBTENER PRECISIÓN DE COLOR
+fps="0.5" # NÚMERO DE FOTOGRAMAS QUE SE VAN A CAPTURAR DEL VIDEO CADA SEGUNDO 
 
-v_salida="${ruta}${nom_f}.gif"
+v_salida="${ruta}${nom_f}_v2gif.gif" # NOMBRE DEL FICHERO GIF ANIMADO INCLUIDA RUTA Y EXTENSIÓN
 
-ffmpeg -y -i "${v_entrada}" -vf fps="${fps}",palettegen "${paleta}"
+# CREACIÓN DE LA PALETA DE 256 COLORES ADAPTADA AL VIDEO
+ffmpeg \
+  -y \
+  -i "${v_entrada}" \
+  -vf \
+    fps="${fps}",\
+    palettegen "${paleta}"
+# CODIFICACIÓN DEL GIF EMPLEANDO LA PALETA DE COLORES DEL VIDEO
 ffmpeg \
   -y \
   -i "${v_entrada}" \
@@ -23,4 +30,5 @@ ffmpeg \
       " \
     -map '[v]' \
   "${v_salida}"
+  # ELIMINACIÓN DE LA PALETA
 rm "${paleta}"

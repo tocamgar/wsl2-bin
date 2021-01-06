@@ -1,0 +1,4 @@
+#! /bin/bash
+echo -n "Introduce el video de salida (/mnt/e/Vídeos/): "
+read -e -i "/mnt/e/Vídeos/" v_salida
+ffmpeg -i "$(youtube-dl -g "$1")" -c copy "${v_salida}".mp4
