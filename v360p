@@ -1,0 +1,43 @@
+#! /bin/bash
+# v288p.sh CÓDIGO ORIGINAL
+# 02 Se añaden mensajes de entrada para video de entrada textos
+# 04 Se añaden t_ini y t_fin con lectura desde read y valores por defecto
+# añado ? en -map '0:a?' para que ignore la ausencia de flujo de audio
+#################################################################################################
+#set -x
+echo -n "Introduce el video de entrada: (/mnt/e/Vídeos/) "
+read -e -i "/mnt/e/Vídeos/" v_entrada			# RUTA COMPLETA DEL VÍDEO DE ENTRADA
+ruta="${v_entrada%/*}/"
+nom_f="${v_entrada##*/}"
+ext_f=".${nom_f##*.}"
+nom_f="${nom_f%.*}"
+
+read -ep "Introduce el inicio de la secuencia (00:00:00.000): " -i "00:00:00.000" t_ini
+v_dur=$(ffprobe -v error -show_entries format=duration -sexagesimal -of default=noprint_wrappers=1:nokey=1 "${v_entrada}") 
+read -ep "Introduce el final de la secuencia (${v_dur}): " -i "${v_dur}" t_fin
+
+v_salida="${ruta}${nom_f}_360p.mp4"
+
+f_resolucion="
+	[0:v]
+		scale=
+			width=-2:
+			height=360:
+			flags=bicubic
+	"
+
+##########
+# FFMPEG #
+##########
+
+ffmpeg -y \
+	-ss "${t_ini}" \
+	-to "${t_fin}" \
+	-i "${v_entrada}" \
+	-vf "${f_resolucion}" \
+	-c:v libx264 \
+	-crf 30 \
+	-c:a aac \
+	-q:a 1 \
+	-ac 1 \
+	"${v_salida}"
