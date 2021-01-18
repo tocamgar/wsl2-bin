@@ -5,24 +5,24 @@
 #    Se modifica el texto para que no expanda los caracteres especiales (: \)
 #################################################################################################
 #set -x
-echo -n "Introduce el audio de entrada: "
-read -e a_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+#echo -n "Introduce el audio de entrada: "
+read -ep "Introduce el audio de entrada (/mnt/e/Sonido/PRENSA/): " -i "/mnt/e/Sonido/PRENSA/" a_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
 # a_entrada="/mnt/e/Sonido/PRENSA/EL DIARIO.ES/El exnúmero dos de Interior depositó ante.m4a"			# RUTA COMPLETA DEL AUDIO DE ENTRADA
 ruta="${a_entrada%/*}/"		# SOLO LA RUTA DEL FICHERO DE AUDIO
 nom_f="${a_entrada##*/}"	# NOMBRE DEL FICHERO CON EXTENSIÓN
 ext_f=".${nom_f##*.}"		# EXTENSIÓN DEL FICHERO CON . DELANTE
 nom_f="${nom_f%.*}"			# NOMBRE DEL FICHERO SIN EXTENSIÓN
 
-echo -n "Introduce la ruta del vídeo de salida: "
-read -e ruta_salida	# RUTA DEL VIDEO DE SALIDA
+#echo -n "Introduce la ruta del vídeo de salida: "
+read -ep "Introduce la ruta del vídeo de salida (/mnt/e/Vídeos/PRENSA/): " -i "/mnt/e/Vídeos/PRENSA/" ruta_salida	# RUTA DEL VIDEO DE SALIDA
 
 fontfile="/mnt/c/Windows/Fonts/impact.ttf"	# UBICACIÓN DE LA FUENTE DE TEXTO A EMPLEAR
 
-read -p "Introduce el titular 1: " txt_l1				# LINEA 1 DE TEXTO A INCRUSTAR
+read -ep "Introduce el titular 1: " txt_l1				# LINEA 1 DE TEXTO A INCRUSTAR
 
-read -p "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
+read -ep "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
 
-read -p "Introduce la url: " url				# LINEA 2 DE TEXTO A INCRUSTAR
+#read -p "Introduce la url: " url				# LINEA 2 DE TEXTO A INCRUSTAR
 
 fondo="/mnt/e/Pictures/${nom_f}.png"
 #logo="/mnt/e/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
@@ -30,7 +30,7 @@ fondo="/mnt/e/Pictures/${nom_f}.png"
 f_resolucion='
 	[0:v]
 		scale=
-			width=-2:
+			width=640:
 			height=360:
 			flags=bicubic
 '
@@ -41,8 +41,8 @@ f_txt_l1='
 		text='${txt_l1}':
 		fontcolor=white:
 		borderw=1:
-		fontsize=18:
-		alpha=1.00:
+		fontsize=20:
+		alpha=1:
 		x=(w-tw)/2:
 		y=(th/4):
 		expansion=none
@@ -54,23 +54,10 @@ f_txt_l2='
 		text='${txt_l2}':
 		fontcolor=white:
 		borderw=1:
-		fontsize=18:
-		alpha=1.00:
+		fontsize=20:
+		alpha=1:
 		x=(w-tw)/2:
 		y=(2*th/4)+text_h:
-		expansion=none
-'
-f_url='
-,
-	drawtext=
-		fontfile='${fontfile}':
-		text='${url}':
-		fontcolor=lightskyblue:
-		borderw=1:
-		fontsize=10:
-		alpha=1.00:
-		x=(w-tw)/2:
-		y=(5*th):
 		expansion=none
 '
 f_txt_logo='
@@ -81,7 +68,7 @@ f_txt_logo='
 		fontcolor=white:
 		borderw=1:
 		fontsize=18:
-		alpha=0.60:
+		alpha=1:
 		x=w-tw-10:
 		y=h-th-10:
 		expansion=none
@@ -91,7 +78,7 @@ f_showwaves="
 ;
 [1:a]
 	showwaves=
-		s=300x100:
+		s=500x300:
 		mode=cline:
 		colors=0xffffff,
 	colorkey=
@@ -100,19 +87,19 @@ f_showwaves="
 		blend=0.1,
 	format=argb,
 	colorchannelmixer=
-		aa=0.50
+		aa=0.5
 [waves]
 ;
 [fondo][waves]
 	overlay=
 		x=(main_w-overlay_w)/2:
-		y=(main_h-overlay_h-5)
+		y=(main_h-overlay_h-15)
 [v]
 "
 
-filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_url}${f_txt_logo}${f_showwaves}"
+filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_txt_logo}${f_showwaves}"
 
-v_salida="${ruta_salida}${nom_f}_waves_h264_288p_crf30_aac_q1_ac1_01.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
+v_salida="${ruta_salida}${nom_f}_waves.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
 
 ##########
 # FFMPEG #

@@ -6,7 +6,7 @@ read -ep "Introduce la URL del vídeo: " url
 read -ep "Introduce el nombre del fichero de vídeo de salida (/mnt/e/Vídeos/): " -i "/mnt/e/Vídeos/" v_salida
 ffprobe "${url}"
 #read -ep "Elige el flujo de video a descargar (0:0): " -i "0:0" flujo_video
-read -ep "Elige el flujo de video a descargar (0): " -i "0" flujo_video
+read -ep "Elige el flujo de video a descargar (0:0): " -i "0:0" flujo_video
 read -ep "Elige el flujo de audio a descargar (0:1): " -i "0:1" flujo_audio
 v_dur=$(ffprobe -v error -show_entries format=duration -sexagesimal -of default=noprint_wrappers=1:nokey=1 "${url}")
 read -ep "Introduce el inicio de la secuencia (00:00:00.000): " -i "00:00:00.000" t_ini
@@ -24,16 +24,7 @@ ffmpeg -y \
 	-ss "${t_ini}" \
 	-to "${t_fin}" \
 	-i "${url}" \
-	-filter_complex \
-		" \
-		[0:"${flujo_video}"]
-		scale=
-			width=-2:
-			height=360:
-			flags=bicubic
-		[v]
-		" \
-	-map '[v]' \
+	-map "${flujo_video}" \
 	-map "${flujo_audio}" \
 	-c:v h264 \
 	-crf 30 \
