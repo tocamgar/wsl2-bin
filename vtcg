@@ -80,12 +80,21 @@ ffmpeg -y \
 	-to "${t_fin}" \
 	-i "${v_entrada}" \
 	-filter_complex "${filter_complex}" \
-	-map '0:a?' \
+	-map '0:v' \
 	-c:v h264 \
 	-crf 30 \
+	-map '0:a?' \
+	-metadata:s:a:0 language="spa" \
+	-metadata:s:a:0 title="Español" \
+	-metadata:s:a:1 language="eng" \
+	-metadata:s:a:1 title="English" \
 	-c:a aac \
 	-q:a 1 \
 	-ac 1 \
+	-map '0:s?' \
+	-c:s mov_text \
+	-shortest \
 	"${v_salida}"
 
 #echo "ffmpeg -y -ss ${t_ini} -to ${t_fin} -i ${v_entrada} -filter_complex ${filter_complex} -map '0:a?' -c:v h264 -crf 30 -c:a aac -q:a 1 -ac 1 ${v_salida}"
+#	-map '0:a?' \

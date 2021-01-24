@@ -78,7 +78,7 @@ f_showwaves="
 ;
 [1:a]
 	showwaves=
-		s=500x300:
+		s=350x150:
 		mode=cline:
 		colors=0xffffff,
 	colorkey=
@@ -87,15 +87,20 @@ f_showwaves="
 		blend=0.1,
 	format=argb,
 	colorchannelmixer=
-		aa=0.5
+		aa=0.85
 [waves]
 ;
 [fondo][waves]
 	overlay=
-		x=(main_w-overlay_w)/2:
-		y=(main_h-overlay_h-15)
+		x=240:
+		y=210
 [v]
 "
+#[fondo][waves]
+#	overlay=
+#		x=(main_w-overlay_w)/2:
+#		y=(main_h-overlay_h-15)
+#[v]
 
 filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_txt_logo}${f_showwaves}"
 

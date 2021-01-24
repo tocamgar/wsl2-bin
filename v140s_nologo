@@ -1,9 +1,9 @@
 #! /bin/bash
 #v288p_nologo
 #################################################################################################
-set -x
-echo -n "Introduce el video de entrada: "
-read -e v_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+#set -x
+echo -n "Introduce el video de entrada: (/mnt/e/Vídeos/) "
+read -e -i "/mnt/e/Vídeos/" v_entrada			# RUTA COMPLETA DEL VÍDEO DE ENTRADA
 ruta="${v_entrada%/*}/"
 nom_f="${v_entrada##*/}"
 ext_f=".${nom_f##*.}"
@@ -22,17 +22,10 @@ atempo=$(echo "scale=6; 1/${setpts}" | bc )
 read -p "Introduce el titular 1: " txt_l1				# LINEA 1 DE TEXTO A INCRUSTAR
 read -p "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
 
-v_salida="${ruta}${nom_f}_h264_288p_crf30_aac_q1_ac1_nologo_140s.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
+v_salida="${ruta}${nom_f}_140s.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
 
-f_resolucion="
-	[0:v]
-		scale=
-			width=-2:
-			height=288:
-			flags=bicubic
-	"
 f_txt_l1="
-,
+	[0:v]
   drawtext=
 		fontfile='${fontfile}':
 		text='${txt_l1}':
@@ -64,7 +57,7 @@ f_setpts="
 	atempo='${atempo}'
 [a]
 "
-filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_setpts}"
+filter_complex="${f_txt_l1}${f_txt_l2}${f_setpts}"
 
 ##########
 # FFMPEG #

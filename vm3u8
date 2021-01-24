@@ -4,21 +4,19 @@
 # SCRIPT PARA DESCARGAR UN VIDEO DE M3U8 CON LA RESOLUCIÓN QUE ELIJAMOS Y CON LA OPCIÓN DE RECORTARLO
 read -ep "Introduce la URL del vídeo: " url
 read -ep "Introduce el nombre del fichero de vídeo de salida (/mnt/e/Vídeos/): " -i "/mnt/e/Vídeos/" v_salida
-ffprobe "${url}"
-#read -ep "Elige el flujo de video a descargar (0:0): " -i "0:0" flujo_video
-read -ep "Elige el flujo de video a descargar (0:0): " -i "0:0" flujo_video
-read -ep "Elige el flujo de audio a descargar (0:1): " -i "0:1" flujo_audio
+ffprobe "${url}" #Muestra la información del m3u8, principalmente flujos de video, audio, subtítulos y metadatos
+read -ep "Elige el flujo de video a descargar (0:0): " -i "0:0" flujo_video #Elegimos el flujo de vídeo deseado (resolución)
+read -ep "Elige el flujo de audio a descargar (0:1): " -i "0:1" flujo_audio #Elegimos el flujo de audio deseado (calidad)
+#Almacenamos en $v_dur la duración del video en formato sexagesimal
 v_dur=$(ffprobe -v error -show_entries format=duration -sexagesimal -of default=noprint_wrappers=1:nokey=1 "${url}")
-read -ep "Introduce el inicio de la secuencia (00:00:00.000): " -i "00:00:00.000" t_ini
-read -ep "Introduce el final de la secuencia (${v_dur}): " -i "${v_dur}" t_fin
-set -x
+read -ep "Introduce el inicio de la secuencia (00:00:00.000): " -i "00:00:00.000" t_ini #Indicamos el punto de inicio del video
+read -ep "Introduce el final de la secuencia (${v_dur}): " -i "${v_dur}" t_fin #Indicamos el punto de fin del video
+#set -x
 ##########
 # FFMPEG #
 ##########
-# PARA PODER RECORTAR EL STREAM TENEMOS QUE CODIFICAR, NO VALE -c copy
+# PARA PODER RECORTAR CON PRECISIÓN EL FLUJO TENEMOS QUE CODIFICAR, NO VALE -c copy
 #	-c copy \
-#	-map "${flujo_video}" \
-#	-map "${flujo_audio}" \
 
 ffmpeg -y \
 	-ss "${t_ini}" \
