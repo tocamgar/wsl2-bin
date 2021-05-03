@@ -21,9 +21,9 @@ read -ep "Introduce el final de la secuencia (${v_dur}): " -i "${v_dur}" t_fin
 read -p "Introduce el titular 1: " txt_l1		# LINEA 1 DE TEXTO A INCRUSTAR
 read -p "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
 
-logo="/mnt/e/Pictures/logo-cam_53x26.png"
+#logo="/mnt/d/Pictures/logo-cam_53x26.png"
 
-v_salida="${ruta}${nom_f}_h264_512p_crf30_aac_q1_ac1.mp4"
+v_salida="${ruta}${nom_f}_512p.mp4"
 
 f_resolucion="
 	[0:v]
@@ -55,23 +55,8 @@ f_txt_l2="
 		alpha=0.67:
 		x=(w-tw)/2:
 		y=(6*(th/4))
-	[txt]
 "
-f_logo="
-;
-	[1:v]
-		format=argb,
-		colorchannelmixer=
-			aa=0.33
-	[logo]
-;
-	[txt][logo]
-		overlay=
-		x=(main_w-overlay_w-5):
-		y=(main_h-overlay_h-5)
-	[v]
-"
-filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_logo}"
+filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}"
 
 ##########
 # FFMPEG #
@@ -81,9 +66,8 @@ ffmpeg -y \
 	-ss "${t_ini}" \
 	-to "${t_fin}" \
 	-i "${v_entrada}" \
-	-i "${logo}" \
 	-filter_complex "${filter_complex}" \
-	-map '[v]' \
+	-map '0:v' \
 	-map '0:a?' \
 	-c:a aac \
 	-q:a 1 \

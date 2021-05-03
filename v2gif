@@ -1,7 +1,7 @@
 #! /bin/bash
 # CONVIERTE UN VIDEO EN GIF ANIMADO
 echo -n "Introduce el video de entrada: "
-read -e -i "/mnt/e/Vídeos/" v_entrada			# RUTA COMPLETA DEL FICHERO DE VIDEO DE ENTRADA
+read -e -i "/mnt/d/Vídeos/" v_entrada			# RUTA COMPLETA DEL FICHERO DE VIDEO DE ENTRADA
 ruta="${v_entrada%/*}/" # RUTA DEL FICHERO DE VIDEO DE ENTRADA SIN EL NOMBRE NI LA EXTENSIÓN
 nom_f="${v_entrada##*/}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA CON EXTENSIÓN
 ext_f=".${nom_f##*.}" # EXTENSIÓN DEL FICHERO DE VIDEO DE ENTRADA

@@ -2,9 +2,9 @@
 #0_0 CÓDIGO ORIGINAL
 #################################################################################################
 
-v_ent="/mnt/e/Sonido/PODCAST/CARNE CRUDA/test.mp3"
-logo="/mnt/e/Pictures/logo-cam_53x26_50a.png"
-v_sal="/mnt/e/Users/tocam/PRUEBAS FFMPEG/ECUALIZADOR GRÁFICO - PRUEBA 01/RESULTADOS/vfreqs_0_8.mp4"
+v_ent="/mnt/d/Sonido/PODCAST/CARNE CRUDA/test.mp3"
+logo="/mnt/d/Pictures/logo-cam_53x26_50a.png"
+v_sal="/mnt/d/Users/tocam/PRUEBAS FFMPEG/ECUALIZADOR GRÁFICO - PRUEBA 01/RESULTADOS/vfreqs_0_8.mp4"
 ffmpeg -y \
   -i "${audio}"\
   -i "${fondo}"\

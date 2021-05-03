@@ -5,8 +5,8 @@
 # añado ? en -map '0:a?' para que ignore la ausencia de flujo de audio
 #################################################################################################
 #set -x
-echo -n "Introduce el video de entrada: (/mnt/e/Vídeos/) "
-read -e -i "/mnt/e/Vídeos/" v_entrada			# RUTA COMPLETA DEL VÍDEO DE ENTRADA
+echo -n "Introduce el video de entrada: (/mnt/d/Vídeos/) "
+read -e -i "/mnt/d/Vídeos/" v_entrada			# RUTA COMPLETA DEL VÍDEO DE ENTRADA
 ruta="${v_entrada%/*}/"
 nom_f="${v_entrada##*/}"
 ext_f=".${nom_f##*.}"
@@ -70,6 +70,7 @@ f_txt_logo='
 '
 
 filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_txt_logo}"
+#filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}"
 
 ##########
 # FFMPEG #
@@ -82,7 +83,7 @@ ffmpeg -y \
 	-filter_complex "${filter_complex}" \
 	-map '0:v' \
 	-c:v h264 \
-	-crf 30 \
+	-crf 25 \
 	-map '0:a?' \
 	-metadata:s:a:0 language="spa" \
 	-metadata:s:a:0 title="Español" \

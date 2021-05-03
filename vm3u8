@@ -3,7 +3,7 @@
 # vm3u8
 # SCRIPT PARA DESCARGAR UN VIDEO DE M3U8 CON LA RESOLUCIÓN QUE ELIJAMOS Y CON LA OPCIÓN DE RECORTARLO
 read -ep "Introduce la URL del vídeo: " url
-read -ep "Introduce el nombre del fichero de vídeo de salida (/mnt/e/Vídeos/): " -i "/mnt/e/Vídeos/" v_salida
+read -ep "Introduce el nombre del fichero de vídeo de salida (/mnt/d/Vídeos/): " -i "/mnt/d/Vídeos/" v_salida
 ffprobe "${url}" #Muestra la información del m3u8, principalmente flujos de video, audio, subtítulos y metadatos
 read -ep "Elige el flujo de video a descargar (0:0): " -i "0:0" flujo_video #Elegimos el flujo de vídeo deseado (resolución)
 read -ep "Elige el flujo de audio a descargar (0:1): " -i "0:1" flujo_audio #Elegimos el flujo de audio deseado (calidad)
@@ -18,15 +18,17 @@ read -ep "Introduce el final de la secuencia (${v_dur}): " -i "${v_dur}" t_fin #
 # PARA PODER RECORTAR CON PRECISIÓN EL FLUJO TENEMOS QUE CODIFICAR, NO VALE -c copy
 #	-c copy \
 
+#	-c:v h264 \
+#	-crf 30 \
+#	-c:a aac \
+#	-q:a 1 \
+#	-ac 1 \
+
 ffmpeg -y \
 	-ss "${t_ini}" \
 	-to "${t_fin}" \
 	-i "${url}" \
 	-map "${flujo_video}" \
 	-map "${flujo_audio}" \
-	-c:v h264 \
-	-crf 30 \
-	-c:a aac \
-	-q:a 1 \
-	-ac 1 \
+	-c copy \
 	"${v_salida}"

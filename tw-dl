@@ -1,5 +1,5 @@
 #! /bin/bash
 read -ep "Introduce la URL del vídeo: " url
-echo -n "Introduce el video de salida (/mnt/e/Vídeos/): "
-read -e -i "/mnt/e/Vídeos/" v_salida
+echo -n "Introduce el video de salida (/mnt/d/Vídeos/): "
+read -e -i "/mnt/d/Vídeos/" v_salida
 ffmpeg -i "$(youtube-dl -g "${url}")" -c copy "${v_salida}"

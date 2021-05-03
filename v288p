@@ -20,7 +20,7 @@ read -ep "Introduce el final de la secuencia (${v_dur}): " -i "${v_dur}" t_fin
 read -p "Introduce el titular 1: " txt_l1		# LINEA 1 DE TEXTO A INCRUSTAR
 read -p "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
 
-logo="/mnt/e/Pictures/logo-cam_53x26.png"
+logo="/mnt/d/Pictures/logo-cam_53x26.png"
 
 v_salida="${ruta}${nom_f}_h264_288p_crf30_aac_q1_ac1.mp4"
 

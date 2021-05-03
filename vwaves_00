@@ -11,7 +11,7 @@
 
 echo -n "Introduce el audio de entrada: "
 read -e a_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
-# a_entrada="/mnt/e/Sonido/PRENSA/EL DIARIO.ES/El exnúmero dos de Interior depositó ante.m4a"			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+# a_entrada="/mnt/d/Sonido/PRENSA/EL DIARIO.ES/El exnúmero dos de Interior depositó ante.m4a"			# RUTA COMPLETA DEL AUDIO DE ENTRADA
 ruta="${a_entrada%/*}/"		# SOLO LA RUTA DEL FICHERO DE AUDIO
 nom_f="${a_entrada##*/}"	# NOMBRE DEL FICHERO CON EXTENSIÓN
 ext_f=".${nom_f##*.}"		# EXTENSIÓN DEL FICHERO CON . DELANTE
@@ -28,8 +28,8 @@ read -p "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
 
 read -p "Introduce la url: " url				# LINEA 2 DE TEXTO A INCRUSTAR
 
-fondo="/mnt/e/Pictures/${nom_f}.png"
-logo="/mnt/e/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
+fondo="/mnt/d/Pictures/${nom_f}.png"
+logo="/mnt/d/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
 
 f_resolucion="
 	[0:v]

@@ -6,15 +6,15 @@
 #################################################################################################
 #set -x
 #echo -n "Introduce el audio de entrada: "
-read -ep "Introduce el audio de entrada (/mnt/e/Sonido/PRENSA/): " -i "/mnt/e/Sonido/PRENSA/" a_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
-# a_entrada="/mnt/e/Sonido/PRENSA/EL DIARIO.ES/El exnúmero dos de Interior depositó ante.m4a"			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+read -ep "Introduce el audio de entrada (/mnt/d/Sonido/PRENSA/): " -i "/mnt/d/Sonido/PRENSA/" a_entrada			# RUTA COMPLETA DEL AUDIO DE ENTRADA
+# a_entrada="/mnt/d/Sonido/PRENSA/EL DIARIO.ES/El exnúmero dos de Interior depositó ante.m4a"			# RUTA COMPLETA DEL AUDIO DE ENTRADA
 ruta="${a_entrada%/*}/"		# SOLO LA RUTA DEL FICHERO DE AUDIO
 nom_f="${a_entrada##*/}"	# NOMBRE DEL FICHERO CON EXTENSIÓN
 ext_f=".${nom_f##*.}"		# EXTENSIÓN DEL FICHERO CON . DELANTE
 nom_f="${nom_f%.*}"			# NOMBRE DEL FICHERO SIN EXTENSIÓN
 
 #echo -n "Introduce la ruta del vídeo de salida: "
-read -ep "Introduce la ruta del vídeo de salida (/mnt/e/Vídeos/PRENSA/): " -i "/mnt/e/Vídeos/PRENSA/" ruta_salida	# RUTA DEL VIDEO DE SALIDA
+read -ep "Introduce la ruta del vídeo de salida (/mnt/d/Vídeos/PRENSA/): " -i "/mnt/d/Vídeos/PRENSA/" ruta_salida	# RUTA DEL VIDEO DE SALIDA
 
 fontfile="/mnt/c/Windows/Fonts/impact.ttf"	# UBICACIÓN DE LA FUENTE DE TEXTO A EMPLEAR
 
@@ -24,8 +24,8 @@ read -ep "Introduce el titular 2: " txt_l2		# LINEA 2 DE TEXTO A INCRUSTAR
 
 #read -p "Introduce la url: " url				# LINEA 2 DE TEXTO A INCRUSTAR
 
-fondo="/mnt/e/Pictures/${nom_f}.png"
-#logo="/mnt/e/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
+fondo="/mnt/d/Pictures/${nom_f}.png"
+#logo="/mnt/d/Pictures/logo-cam_53x26.png"	# RUTA COMPLETA DE LA MARCA DE AGUA A INCRUSTAR
 
 f_resolucion='
 	[0:v]
@@ -78,7 +78,7 @@ f_showwaves="
 ;
 [1:a]
 	showwaves=
-		s=350x150:
+		s=500x350:
 		mode=cline:
 		colors=0xffffff,
 	colorkey=
@@ -87,13 +87,13 @@ f_showwaves="
 		blend=0.1,
 	format=argb,
 	colorchannelmixer=
-		aa=0.85
+		aa=0.5
 [waves]
 ;
 [fondo][waves]
 	overlay=
-		x=240:
-		y=210
+		x=70:
+		y=107
 [v]
 "
 #[fondo][waves]
@@ -103,6 +103,7 @@ f_showwaves="
 #[v]
 
 filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_txt_logo}${f_showwaves}"
+#filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_showwaves}"
 
 v_salida="${ruta_salida}${nom_f}_waves.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
 

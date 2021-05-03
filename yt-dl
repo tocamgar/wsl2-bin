@@ -3,7 +3,7 @@
 # yt-dl
 # SCRIPT PARA DESCARGAR UN VIDEO DE YOUTUBE CON LA RESOLUCIÓN QUE ELIJAMOS Y CON LA OPCIÓN DE RECORTARLO
 read -ep "Introduce la URL del vídeo: " url
-read -ep "Introduce el nombre del fichero de vídeo de salida (/mnt/e/Vídeos/): " -i "/mnt/e/Vídeos/" v_salida
+read -ep "Introduce el nombre del fichero de vídeo de salida (/mnt/d/Vídeos/): " -i "/mnt/d/Vídeos/" v_salida
 youtube-dl -F "${url}"
 read -ep "Elige los flujos de audio y vídeo a descargar (244+249): " -i "244+249" n_flujos
 flujo=($(youtube-dl -f ${n_flujos} -g ${url}))
@@ -16,6 +16,11 @@ flujo=($(youtube-dl -f ${n_flujos} -g ${url}))
 v_dur=$(ffprobe -v error -show_entries format=duration -sexagesimal -of default=noprint_wrappers=1:nokey=1 "${flujo[0]}")
 read -ep "Introduce el inicio de la secuencia (00:00:00.000): " -i "00:00:00.000" t_ini
 read -ep "Introduce el final de la secuencia (${v_dur}): " -i "${v_dur}" t_fin
+set x
+#	-v debug \
+#	-i "${flujo[1]}" \
+#	-c copy \
+#	-shortest \
 
 ##########
 # FFMPEG #
@@ -27,7 +32,9 @@ ffmpeg -y \
 	-i "${flujo[0]}" \
 	-ss "${t_ini}" \
 	-to "${t_fin}" \
-	-i "${flujo[1]}" \
-	-c copy \
-	-shortest \
+	-c:v h264 \
+	-crf 25 \
+	-c:a aac \
+	-q:a 1 \
+	-ac 1 \
 	"${v_salida}"

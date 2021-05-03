@@ -7,12 +7,12 @@
 #0_6 AÑADO LOGO
 #0_7 ELIMINO -LOOP 1 EN IMAGENES
 #0_8 CAMBIO OVERLAY POR PAD EN LINEA 38, ELIMINO -SHORTEST DE LA SALIDA################################################################################################
-#audio="/mnt/e/Sonido/PODCAST/CARNE CRUDA/test.mp3"
-audio="/mnt/e/Sonido/PODCAST/CARNE CRUDA/2020-06-24 COVID-19 CONSPIRACION BILL GATES SOROS ULTRADERECHA_.mp3"
-gradiente="/mnt/e/Pictures/IRIS.png"
-mascara="/mnt/e/Pictures/MATRIZ.png"
-fondo="/mnt/e/Pictures/CARNE CRUDA CONSPIRACIÓN.png"
-logo="/mnt/e/Pictures/logo-cam_53x26_50a.png"
+#audio="/mnt/d/Sonido/PODCAST/CARNE CRUDA/test.mp3"
+audio="/mnt/d/Sonido/PODCAST/CARNE CRUDA/2020-06-24 COVID-19 CONSPIRACION BILL GATES SOROS ULTRADERECHA_.mp3"
+gradiente="/mnt/d/Pictures/IRIS.png"
+mascara="/mnt/d/Pictures/MATRIZ.png"
+fondo="/mnt/d/Pictures/CARNE CRUDA CONSPIRACIÓN.png"
+logo="/mnt/d/Pictures/logo-cam_53x26_50a.png"
 salida="/mnt/c/Users/tocam/PRUEBAS FFMPEG/ECUALIZADOR GRÁFICO - PRUEBA 01/RESULTADOS/vfreqs_0_8.mp4"
 
 ffmpeg -y \

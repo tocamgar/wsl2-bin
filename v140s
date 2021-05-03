@@ -2,8 +2,8 @@
 #v288p_nologo
 #################################################################################################
 #set -x
-echo -n "Introduce el video de entrada: (/mnt/e/Vídeos/) "
-read -e -i "/mnt/e/Vídeos/" v_entrada			# RUTA COMPLETA DEL VÍDEO DE ENTRADA
+echo -n "Introduce el video de entrada: (/mnt/d/Vídeos/) "
+read -e -i "/mnt/d/Vídeos/" v_entrada			# RUTA COMPLETA DEL VÍDEO DE ENTRADA
 ruta="${v_entrada%/*}/"
 nom_f="${v_entrada##*/}"
 ext_f=".${nom_f##*.}"
@@ -74,5 +74,5 @@ ffmpeg -y \
 	-q:a 1 \
 	-ac 1 \
 	-c:v h264 \
-	-crf 30 \
+	-crf 25 \
 	"${v_salida}"
