@@ -33,6 +33,7 @@ f_resolucion='
 			width=640:
 			height=360:
 			flags=bicubic
+	[fondo]
 '
 f_txt_l1='
 ,
@@ -78,22 +79,23 @@ f_showwaves="
 ;
 [1:a]
 	showwaves=
-		s=500x350:
+		s=432x133:
 		mode=cline:
-		colors=0xffffff,
+		scale=cbrt:
+		colors=white,
 	colorkey=
 		color=0x000000:
-		similarity=0.01:
-		blend=0.1,
+		similarity=0.25:
+		blend=0.75,
 	format=argb,
 	colorchannelmixer=
-		aa=0.5
+		aa=0.8
 [waves]
 ;
 [fondo][waves]
 	overlay=
-		x=70:
-		y=107
+		x=179:
+		y=132
 [v]
 "
 #[fondo][waves]
@@ -102,8 +104,8 @@ f_showwaves="
 #		y=(main_h-overlay_h-15)
 #[v]
 
-filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_txt_logo}${f_showwaves}"
-#filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_showwaves}"
+#filter_complex="${f_resolucion}${f_txt_l1}${f_txt_l2}${f_txt_logo}${f_showwaves}"
+filter_complex="${f_resolucion}${f_showwaves}"
 
 v_salida="${ruta_salida}${nom_f}_waves.mp4"	# RUTA COMPLETA DEL VIDEO DE SALIDA
 
@@ -118,8 +120,8 @@ ffmpeg -y \
   -map '[v]' \
   -map '1:a' \
 	-c:v h264 \
-	-crf 30 \
+	-crf 32 \
 	-c:a aac \
-	-q:a 1 \
+	-q:a 0.4 \
 	-ac 1 \
   "${v_salida}"
