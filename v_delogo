@@ -1,0 +1,35 @@
+#! /bin/bash
+# Aplica un filtro que difumina la marca de agua entre las coordenadas indicadas
+
+# video=$1
+# x=$2
+# y=$3
+# w=$4
+# h=$5
+
+echo -n "Video de origen: "
+read -e -i "/mnt/d/Vídeos/" video
+ruta="${video%/*}/" # RUTA DEL FICHERO DE VIDEO DE ENTRADA SIN EL NOMBRE NI LA EXTENSIÓN
+nom_f="${video##*/}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA CON EXTENSIÓN
+ext_f=".${nom_f##*.}" # EXTENSIÓN DEL FICHERO DE VIDEO DE ENTRADA
+nom_f="${nom_f%.*}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA SIN EXTENSIÓN
+echo -n "Origen X (0): "
+read -e -i "0" x
+echo -n "Origen y (0): "
+read -e -i "0" y
+echo -n "Anchura (1): "
+read -e -i "1" w -p "Anchura W (1): "
+echo -n "Altura (1): "
+read -e -i "1" h -p "Altura H (1): "
+
+ffmpeg \
+  -i ${video} \
+  -filter_complex "[0:v]delogo=x=$x:y=$y:w=$w:h=$h[v]" \
+  -map [v] \
+  -map 0:a? \
+  -c:v h264 \
+  -crf 25 \
+  -c:a aac \
+  -q:a 0.4 \
+  -ac 1 \
+${ruta}${nom_f}_delogo${ext_f}
