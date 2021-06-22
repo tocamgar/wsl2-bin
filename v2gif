@@ -7,16 +7,19 @@ nom_f="${v_entrada##*/}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA CON EXTENSIÓN
 ext_f=".${nom_f##*.}" # EXTENSIÓN DEL FICHERO DE VIDEO DE ENTRADA
 nom_f="${nom_f%.*}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA SIN EXTENSIÓN
 paleta="${ruta}${nom_f}.png" # NOMBRE DEL FICHERO DE LA PALETA DE 256 COLORES DEL GIF ANIMADO PARA OBTENER PRECISIÓN DE COLOR
-fps="0.5" # NÚMERO DE FOTOGRAMAS QUE SE VAN A CAPTURAR DEL VIDEO CADA SEGUNDO 
+echo -n "Introduce el número de fotogramas por segundo (0.5): "
+read -e -i "0.5" fps			# RUTA COMPLETA DEL FICHERO DE VIDEO DE ENTRADA
+#fps="0.5" # NÚMERO DE FOTOGRAMAS QUE SE VAN A CAPTURAR DEL VIDEO CADA SEGUNDO 
 
 v_salida="${ruta}${nom_f}_v2gif.gif" # NOMBRE DEL FICHERO GIF ANIMADO INCLUIDA RUTA Y EXTENSIÓN
 
 # CREACIÓN DE LA PALETA DE 256 COLORES ADAPTADA AL VIDEO
+echo "ffmpeg -y -i ${v_entrada} -vf fps=${fps},palettegen ${paleta}"
 ffmpeg \
   -y \
   -i "${v_entrada}" \
   -vf \
-    fps="${fps}",\
+    fps="${fps}",\ # Importante no dejar espacios entre , y \ en esta linea
     palettegen "${paleta}"
 # CODIFICACIÓN DEL GIF EMPLEANDO LA PALETA DE COLORES DEL VIDEO
 ffmpeg \
@@ -25,7 +28,7 @@ ffmpeg \
   -i "${paleta}" \
     -filter_complex \
       "
-        [0:v] fps=${fps} [v1],
+        [0:v]fps="${fps}"[v1],
         [v1][1]paletteuse[v]
       " \
     -map '[v]' \

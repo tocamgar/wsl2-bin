@@ -31,7 +31,7 @@ f_resolucion='
 	[0:v]
 		scale=
 			width=640:
-			height=360:
+			height=640:
 			flags=bicubic
 	[fondo]
 '
@@ -79,7 +79,7 @@ f_showwaves="
 ;
 [1:a]
 	showwaves=
-		s=432x133:
+		s=380x260:
 		mode=cline:
 		scale=cbrt:
 		colors=white,
@@ -94,8 +94,8 @@ f_showwaves="
 ;
 [fondo][waves]
 	overlay=
-		x=179:
-		y=132
+		x=240:
+		y=251
 [v]
 "
 #[fondo][waves]
