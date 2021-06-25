@@ -27,7 +27,7 @@ f_resolucion="
 		scale=
 			width=-2:
 			height=360:
-			flags=bicubic
+			flags=lanczos
 	"
 f_txt_l1='
 ,
