@@ -13,6 +13,8 @@ ruta="${video%/*}/" # RUTA DEL FICHERO DE VIDEO DE ENTRADA SIN EL NOMBRE NI LA E
 nom_f="${video##*/}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA CON EXTENSIÓN
 ext_f=".${nom_f##*.}" # EXTENSIÓN DEL FICHERO DE VIDEO DE ENTRADA
 nom_f="${nom_f%.*}" # NOMBRE DEL FICHERO DE VIDEO DE ENTRADA SIN EXTENSIÓN
+
+
 echo -n "Origen X (0): "
 read -e -i "0" x
 echo -n "Origen y (0): "
