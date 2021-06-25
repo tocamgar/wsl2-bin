@@ -14,24 +14,26 @@ read -e -i "0.5" fps			# RUTA COMPLETA DEL FICHERO DE VIDEO DE ENTRADA
 v_salida="${ruta}${nom_f}_v2gif.gif" # NOMBRE DEL FICHERO GIF ANIMADO INCLUIDA RUTA Y EXTENSIÓN
 
 # CREACIÓN DE LA PALETA DE 256 COLORES ADAPTADA AL VIDEO
-echo "ffmpeg -y -i ${v_entrada} -vf fps=${fps},palettegen ${paleta}"
+# echo "ffmpeg -y -i ${v_entrada} -vf fps=${fps},palettegen ${paleta}"
 ffmpeg \
   -y \
   -i "${v_entrada}" \
-  -vf \
-    fps="${fps}",\ # Importante no dejar espacios entre , y \ en esta linea
-    palettegen "${paleta}"
+  	-filter_complex \
+    	fps="${fps}",palettegen=stats_mode=diff "${paleta}"
+
 # CODIFICACIÓN DEL GIF EMPLEANDO LA PALETA DE COLORES DEL VIDEO
 ffmpeg \
-  -y \
-  -i "${v_entrada}" \
-  -i "${paleta}" \
-    -filter_complex \
-      "
+	-y \
+	-r 5 \
+	-i "${v_entrada}" \
+	-i "${paleta}" \
+	-filter_complex \
+		"
         [0:v]fps="${fps}"[v1],
         [v1][1]paletteuse[v]
-      " \
+		" \
     -map '[v]' \
-  "${v_salida}"
-  # ELIMINACIÓN DE LA PALETA
+	"${v_salida}"
+
+# ELIMINACIÓN DE LA PALETA
 rm "${paleta}"
