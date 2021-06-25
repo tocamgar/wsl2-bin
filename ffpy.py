@@ -1,3 +1,4 @@
+#PRUEVA DE FFMPEG A TRAVÉS DE PYTHON CON ENTORNO GRÁFICO
 import tkinter as tk
 import subprocess
 ventana = tk.Tk()
